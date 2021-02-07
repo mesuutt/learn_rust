@@ -8,7 +8,7 @@ pub trait UserService {
 }
 
 pub struct UserServiceImpl {
-    client: Box<dyn UserClient>,
+    client: Box<dyn UserClient + Send + Sync>,
 }
 
 #[async_trait]
@@ -18,7 +18,7 @@ impl UserService for UserServiceImpl {
     }
 }
 
-pub fn new<T: 'static + UserClient>(client: T) ->  Box<dyn UserService> {
+pub fn new<T: 'static  + UserClient + Send + Sync>(client: T) ->  Box<dyn UserService> {
     Box::new(UserServiceImpl {
         client: Box::new(client),
     })
